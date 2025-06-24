@@ -1,0 +1,104 @@
+
+
+<div class="container mt-4">
+    <h2 class="text-center">Listado de Estudiantes</h2>
+    <div class="d-flex justify-content-end">
+    <button class="btn btn-primary mb-3" (click)="mostrarFormulario=!mostrarFormulario">
+        Añadir nuevo estudiante
+    </button>
+</div>
+
+
+<div *ngIf="mostrarFormulario">
+    <form [formGroup]="formEstudiantes" (ngSubmit)="onSubmit()">
+        <div class="row" >
+            <div class="col-md-6">
+                <label>DNI</label>
+                <input type="text" class="form-control" placeholder="Ingrese su número de documento" formControlName="dni" #dni>
+
+                <ng-template [ngIf]="formEstudiantes.get('dni')?.invalid && 
+                formEstudiantes.get('dni')?.touched"> 
+                <p class="alert alert-danger">Debe ingresar un DNI valido </p>
+                </ng-template>
+
+            </div>
+            <div class="col-md-6">
+                <label>Nombre y Apellido</label>
+                <input type="text" class="form-control" placeholder="Escriba su nombre y apellido" formControlName="nombreApellido" #nombreApellido >
+                <div *ngIf="formEstudiantes.controls.nombreApellido.errors && 
+                (formEstudiantes.controls.nombreApellido.touched || formEstudiantes.controls.nombreApellido.dirty)"
+                class="alert alert-danger"> 
+                Nombre es obligatorio.
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Email</label>
+                <input type="email" class="form-control" placeholder="name@example.com" formControlName="email" #email>
+                <div *ngIf="formEstudiantes.controls.email.errors && 
+                (formEstudiantes.controls.email.touched || formEstudiantes.controls.email.dirty)"
+                class="alert alert-danger"> 
+                Email es obligatorio.
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Fecha de Nacimiento</label>
+                <input type="date" class="form-control" formControlName="fechaNacimiento" #fechaNacimiento>
+                <div *ngIf="formEstudiantes.controls.fechaNacimiento.errors && 
+                (formEstudiantes.controls.fechaNacimiento.touched || formEstudiantes.controls.fechaNacimiento.dirty)"
+                class="alert alert-danger"> 
+                Fecha de Nacimiento es obligatorio.
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-success me-2" (click)="mostrarEstudiantes()">Guardar estudiante</button>
+            <button type="submit" class="btn btn-danger" (click)="mostrarFormulario=!mostrarFormulario">Cancelar</button>
+        </div>
+        <div class="container-fluid fondo p-1 m-1">
+            DNI : {{dni.value}} <br>
+            Nombre y Apellido : {{nombreApellido.value}} <br>
+            Email : {{email.value}} <br>
+            Fecha de Nacimiento : {{fechaNacimiento.value}}
+        </div>
+        <pre>{{formEstudiantes.value | json}}</pre>
+    </form>
+
+</div>
+
+</div>
+<div>
+    <table class="table table-bordered table-striped mt-4">
+        <thead class="table-warning ">
+            <tr>
+                <td>ID</td>
+                <th>DNI</th>
+                <th>Nombre y Apellido</th>
+                <th>Email</th>
+                <th>Fecha de Nacimiento</th>
+                <th>#</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor=" let estudiante of estudiantes">
+                <td>{{estudiante.estu_id}}</td>
+                <td>{{estudiante.estu_dni}}</td>
+                <td>{{estudiante.estu_nombreApellido}}</td>
+                <td>{{estudiante.estu_email}}</td>
+                <td>{{estudiante.estu_fechaNacimiento}}</td>
+                <td>
+          <button type="button" class="btn btn-warning text-white me-1" (click)="editarEstudiante(estudiante)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+            </svg>
+          </button>
+          <button type="button" class="btn btn-danger" (click)="eliminarEstudiante(estudiante.estu_id)" >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+            </svg>
+          </button>
+          </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
